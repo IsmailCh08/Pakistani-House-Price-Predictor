@@ -25,7 +25,22 @@ def clean_one_price(price_string):
         price_string = price_string * 100
     return price_string
 
+def one_area(area_string):
+    if 'Marla' in area_string:
+        area_string = area_string.replace('Marla','')
+        area_string = area_string.strip()
+        area_string = float(area_string)
+    elif 'Kanal' in area_string:
+        area_string = area_string.replace('Kanal','')
+        area_string =area_string.strip()
+        area_string = float(area_string)
+        area_string = area_string/20
+    return area_string
+
 df['Price_Crore'] = df['Price'].apply(clean_one_price)
 
-print(df.isnull().sum())
+df['Area_Marla'] = df['Area'].apply(one_area)
 
+print(df['Area_Marla'].head(10))
+
+# plt.scatter(df['Price_Crore'], df[])
