@@ -28,19 +28,27 @@ def clean_one_price(price_string):
 def one_area(area_string):
     if 'Marla' in area_string:
         area_string = area_string.replace('Marla','')
-        area_string = area_string.strip()
-        area_string = float(area_string)
-    elif 'Kanal' in area_string:
-        area_string = area_string.replace('Kanal','')
         area_string =area_string.strip()
         area_string = float(area_string)
         area_string = area_string/20
+    elif 'Kanal' in area_string:
+        area_string = area_string.replace('Kanal','')
+        area_string = area_string.strip()
+        area_string = float(area_string)
     return area_string
 
 df['Price_Crore'] = df['Price'].apply(clean_one_price)
 
-df['Area_Marla'] = df['Area'].apply(one_area)
+df['Area_Kanal'] = df['Area'].apply(one_area)
+df['Area_Kanal'] = pd.to_numeric(df['Area_Kanal'], errors='coerce')
+df= df.dropna(subset=['Area_Kanal'])
 
-print(df['Area_Marla'].head(10))
+print(df['Location'].nunique())
+print(df['Location'].value_counts().head(10))
 
-# plt.scatter(df['Price_Crore'], df[])
+
+''' plt.scatter(df['Price_Crore'], df['Area_Kanal'])
+plt.xlabel("Price in Crore")
+plt.ylabel('Area in Kanal')
+plt.title("Price vs Area")
+plt.show() '''
