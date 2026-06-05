@@ -12,6 +12,7 @@ def clean_one_price(price_string):
     elif "Crore" in price_string:
         price_string =price_string.replace('Crore','')
         price_string = price_string.strip()
+        price_string = float(price_string)
     elif "Arab" in price_string:
         price_string = price_string.replace('Arab','')
         price_string = float(price_string)
