@@ -5,6 +5,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.datasets import make_classification
+from sklearn.model_selection import cross_val_score
 import numpy as np
 
 df = pd.read_csv('data.csv')
@@ -64,9 +65,13 @@ df['Location_encoded'] = np.where(df['location_count'] > 10, df['Location'].map(
 X = df[['Area_Kanal','Baths_clean','Beds_clean','Location_encoded']]
 y = df['log_price']
 
-X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=.2,random_state=42)
+model = RandomForestRegressor(n_estimators=200,max_depth=15, random_state=42)
 
-model = RandomForestRegressor(n_estimators=100, random_state=42)
+cv_scores = cross_val_score(model, X, y, cv=5,scoring='neg_mean_absolute_error')
+mae_scores = -cv_scores
+print(f"CV MAE: {mae_scores.mean():.2f} (+/- {mae_scores.std():.2f})")
+
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=.2,random_state=42)
 
 model.fit(X_train,y_train)
 log_predict = model.predict(X_test)
