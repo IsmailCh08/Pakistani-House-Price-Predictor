@@ -43,12 +43,20 @@ df['Area_Kanal'] = df['Area'].apply(one_area)
 df['Area_Kanal'] = pd.to_numeric(df['Area_Kanal'], errors='coerce')
 df= df.dropna(subset=['Area_Kanal'])
 
-print(df['Location'].nunique())
-print(df['Location'].value_counts().head(10))
+X = df[['Area','Baths','Beds','Location']]
+y = df['Price_Crore']
 
+Location_mean = df['Location']['Price_Crore'].mean()
+df['Location_encoded'] = df['Location'].map(Location_mean)
+global_mean = df['Location_encoded'].mean()
+df['Location_encoded'].fillna(global_mean)
 
-''' plt.scatter(df['Price_Crore'], df['Area_Kanal'])
-plt.xlabel("Price in Crore")
-plt.ylabel('Area in Kanal')
-plt.title("Price vs Area")
-plt.show() '''
+model = LinearRegression()
+
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=.2,random_state=42)
+
+model.fit(X_train,y_train)
+y_predict = model.predict(X_test)
+
+print("Actual Price:", y_test.values)
+print('Predicted Price:', y_predict)
