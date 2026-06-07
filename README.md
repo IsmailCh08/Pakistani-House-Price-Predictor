@@ -60,5 +60,5 @@ A machine learning model that predicts house prices in Pakistan using real estat
 Ismail Chaudry — Tulane University, Class of 2030
 
 ## Acknowledgments
-- Data source: [name]
+- Data source: (https://www.kaggle.com/datasets/diraf0/pakistan-housing-dataset?select=data.csv)
 - Inspired by Pakistan's real estate market
