@@ -40,8 +40,6 @@ def one_area(area_string):
     return area_string
 
 df['Price_Crore'] = df['Price'].apply(clean_one_price)
-df = df[df['Price_Crore'] > 0]
-df['log_price'] = np.log(df['Price_Crore'])
 
 df['Area_Kanal'] = df['Area'].apply(one_area)
 df['Area_Kanal'] = pd.to_numeric(df['Area_Kanal'], errors='coerce')
@@ -62,10 +60,14 @@ df['location_count'] = df['Location'].map(location_counts)
 
 df['Location_encoded'] = np.where(df['location_count'] > 10, df['Location'].map(Location_mean), global_mean )
 
-X = df[['Area_Kanal','Baths_clean','Beds_clean','Location_encoded']]
-y = df['log_price']
+df_clean = df[df['Price_Crore'] <= 30]
+df = df[df['Price_Crore'] > 0]
+df_clean['log_price'] = np.log(df_clean['Price_Crore'])
 
-model = RandomForestRegressor(n_estimators=200,max_depth=15, random_state=42)
+X = df_clean[['Area_Kanal','Baths_clean','Beds_clean','Location_encoded','Gym','Dining Room','Kitchens']]
+y = df_clean['log_price']
+
+model = RandomForestRegressor(n_estimators=200, max_depth=15,random_state=42)
 
 cv_scores = cross_val_score(model, X, y, cv=5,scoring='neg_mean_absolute_error')
 mae_scores = -cv_scores
@@ -86,6 +88,7 @@ mse = mean_squared_error(y_test_crore, y_predict)
 
 print(f'Mean Absolute Error {mae:.2f}')
 print(f'Mean Squared Error {mse:.2f}')
+
 
 
 
