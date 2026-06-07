@@ -7,6 +7,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.datasets import make_classification
 from sklearn.model_selection import cross_val_score
 import numpy as np
+import xgboost as xgb
+from xgboost import XGBRegressor
 
 df = pd.read_csv('data.csv')
 
@@ -60,14 +62,16 @@ df['location_count'] = df['Location'].map(location_counts)
 
 df['Location_encoded'] = np.where(df['location_count'] > 10, df['Location'].map(Location_mean), global_mean )
 
-df_clean = df[df['Price_Crore'] <= 30]
+df_clean = df[df['Price_Crore'] <= 20]
 df = df[df['Price_Crore'] > 0]
 df_clean['log_price'] = np.log(df_clean['Price_Crore'])
 
 X = df_clean[['Area_Kanal','Baths_clean','Beds_clean','Location_encoded','Gym','Dining Room','Kitchens']]
 y = df_clean['log_price']
 
-model = RandomForestRegressor(n_estimators=200, max_depth=15,random_state=42)
+# model = LinearRegression(), MAE = 1.59, MSE = 7.23
+model = RandomForestRegressor(n_estimators=300,max_depth=15, random_state=42) # MAE = .88, MSE = 2.17 (Lowest)
+# model = XGBRegressor(n_estimators=300,max_depth=15, random_state=42) # MAE = .89, MSE = 2.32
 
 cv_scores = cross_val_score(model, X, y, cv=5,scoring='neg_mean_absolute_error')
 mae_scores = -cv_scores
