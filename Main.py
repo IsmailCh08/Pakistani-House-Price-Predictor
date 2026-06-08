@@ -93,6 +93,14 @@ mse = mean_squared_error(y_test_crore, y_predict)
 print(f'Mean Absolute Error {mae:.2f}')
 print(f'Mean Squared Error {mse:.2f}')
 
+plt.scatter(y_test_crore, y_predict, alpha=0.5)
+plt.plot([0, 30], [0, 30], 'r--', label='Perfect prediction')
+plt.xlabel('Actual Price (Crore)')
+plt.ylabel('Predicted Price (Crore)')
+plt.title('Random Forest: Actual vs Predicted')
+plt.legend()
+plt.savefig('predictions_plot.png', dpi=150, bbox_inches='tight')
+
 
 
 
